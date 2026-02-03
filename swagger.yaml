@@ -5,11 +5,11 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://api.game-domain.com/v1
+  - url: https://api.game-domain.com/api/v1
     description: Serveur de production
 
 paths:
-  /players:
+  /player:
     get:
       summary: Lister tous les joueurs
       parameters:
@@ -39,7 +39,7 @@ paths:
         '201':
           description: Joueur créé avec succès
 
-  /players/{id}:
+  /player/{id}:
     get:
       summary: Récupérer les détails d'un joueur
       parameters:
@@ -87,7 +87,7 @@ paths:
         '204':
           description: Joueur supprimé
 
-  /players/{id}/inventory:
+  /player/{id}/inventory:
     get:
       summary: Voir l'inventaire complet
       parameters:
@@ -123,7 +123,7 @@ paths:
         '201':
           description: Item ajouté
 
-  /players/{id}/gold:
+  /player/{id}/gold:
     patch:
       summary: Modifier le solde d'or (transactionnel)
       parameters:
@@ -153,47 +153,56 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
-        level:
           type: integer
+        level:
+          type: number
           minimum: 1
         inventory:
-          type: array
-          items:
-            $ref: '#/components/schemas/Item'
+          type: object
+          additionalProperties:
+            type: integer
+          description: "Object mapping item IDs to quantities"
         gold:
           type: integer
           minimum: 0
         brainrotId:
-          type: string
-          description: "ID de l'image associée (avatar ou meme)"
+          type: integer
+          description: "ID of the brainrot associated with the player"
     
     PlayerCreate:
       type: object
       required:
-        - id
+        - level
+        - brainrotId
+        - gold
       properties:
-        id:
-          type: string
         level:
-          type: integer
+          type: number
           default: 1
         gold:
           type: integer
           default: 0
         brainrotId:
-          type: string
+          type: integer
+        inventory:
+          type: object
+          additionalProperties:
+            type: integer
+          default: {}
 
     PlayerUpdate:
       type: object
       properties:
         level:
-          type: integer
+          type: number
         gold:
           type: integer
         brainrotId:
-          type: string
+          type: integer
+        inventory:
+          type: object
+          additionalProperties:
+            type: integer
 
     Item:
       type: object

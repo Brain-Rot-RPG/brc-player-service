@@ -1,0 +1,32 @@
+meta {
+  name: Player Service - Get Player by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:4004/api/v1/player/1
+  body: none
+  auth: none
+}
+
+headers {
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Has id property", function() {
+    expect(res.getBody()).to.have.property('id');
+  });
+  
+  test("Has player properties", function() {
+    const body = res.getBody();
+    expect(body).to.have.property('level');
+    expect(body).to.have.property('brainrotId');
+    expect(body).to.have.property('inventory');
+    expect(body).to.have.property('gold');
+  });
+}

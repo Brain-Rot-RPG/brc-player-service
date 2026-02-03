@@ -1,0 +1,46 @@
+meta {
+  name: Player Service - Create Player
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:4004/api/v1/player
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Role: Sigma
+}
+
+body:json {
+  {
+    "level": 5.0,
+    "brainrotId": 1,
+    "inventory": {
+      "1": 2,
+      "2": 1
+    },
+    "gold": 500
+  }
+}
+
+tests {
+  test("Status is 201", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("Has created player properties", function() {
+    const body = res.getBody();
+    expect(body).to.have.property('id');
+    expect(body).to.have.property('level');
+    expect(body).to.have.property('brainrotId');
+    expect(body).to.have.property('inventory');
+    expect(body).to.have.property('gold');
+  });
+  
+  test("Level matches input", function() {
+    expect(res.getBody().level).to.equal(5.0);
+  });
+}

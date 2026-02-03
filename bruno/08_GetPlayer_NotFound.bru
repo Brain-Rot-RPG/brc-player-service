@@ -1,0 +1,24 @@
+meta {
+  name: Player Service - Get Player Not Found
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:4004/api/v1/player/999999
+  body: none
+  auth: none
+}
+
+headers {
+}
+
+tests {
+  test("Status is 404", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+  
+  test("Returns not found message", function() {
+    expect(res.getBody().message).to.include('not found');
+  });
+}

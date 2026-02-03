@@ -1,0 +1,33 @@
+meta {
+  name: Player Service - Update Player
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:4004/api/v1/player/1
+  body: json
+  auth: none
+}
+
+headers {
+}
+
+body:json {
+  {
+    "level": 15.5,
+    "gold": 3000
+  }
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Player updated with new values", function() {
+    const body = res.getBody();
+    expect(body.level).to.equal(15.5);
+    expect(body.gold).to.equal(3000);
+  });
+}

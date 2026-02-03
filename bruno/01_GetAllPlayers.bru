@@ -1,0 +1,25 @@
+meta {
+  name: Player Service - Get All Players
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:4004/api/v1/player
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Role: Sigma
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Response is array", function() {
+    expect(res.getBody()).to.be.an('array');
+  });
+}

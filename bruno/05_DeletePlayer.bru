@@ -1,0 +1,24 @@
+meta {
+  name: Player Service - Delete Player
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:4004/api/v1/player/1
+  body: none
+  auth: none
+}
+
+headers {
+}
+
+tests {
+  test("Status is 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Returns deleted true", function() {
+    expect(res.getBody().deleted).to.equal(true);
+  });
+}

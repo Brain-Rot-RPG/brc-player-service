@@ -60,8 +60,36 @@ export const updatePlayer = (req: Request, res: Response, next: NextFunction) =>
   try {
     const id = parseInt(req.params.id as string, 10);
     const { level, brainrotId, inventory, gold } = req.body;
-    const query = 'UPDATE player SET level = $1, brainrotId = $2, inventory = $3, gold = $4 WHERE id = $5 RETURNING *';
-    const values = [level, brainrotId, inventory, gold, id];
+
+    const fields: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (level !== undefined) {
+      fields.push(`level = $${paramIndex++}`);
+      values.push(level);
+    }
+    if (brainrotId !== undefined) {
+      fields.push(`"brainrotId" = $${paramIndex++}`);
+      values.push(brainrotId);
+    }
+    if (inventory !== undefined) {
+      fields.push(`inventory = $${paramIndex++}`);
+      values.push(inventory);
+    }
+    if (gold !== undefined) {
+      fields.push(`gold = $${paramIndex++}`);
+      values.push(gold);
+    }
+
+    if (fields.length === 0) {
+       res.status(400).json({ message: 'No fields provided for update' });
+       return;
+    }
+
+    values.push(id);
+    const query = `UPDATE player SET ${fields.join(', ')} WHERE id = $${paramIndex} RETURNING *`;
+
     pool.query(query, values)
       .then((result) => {
         if (result.rows.length === 0) {
