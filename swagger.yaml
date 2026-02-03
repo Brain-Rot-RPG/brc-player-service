@@ -1,0 +1,213 @@
+openapi: 3.0.0
+info:
+  title: Player Microservice API
+  description: API de gestion des profils joueurs, inventaires et statistiques.
+  version: 1.0.0
+
+servers:
+  - url: https://api.game-domain.com/v1
+    description: Serveur de production
+
+paths:
+  /players:
+    get:
+      summary: Lister tous les joueurs
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Liste des joueurs récupérée
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+    post:
+      summary: Créer un nouveau joueur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerCreate'
+      responses:
+        '201':
+          description: Joueur créé avec succès
+
+  /players/{id}:
+    get:
+      summary: Récupérer les détails d'un joueur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Détails du joueur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '404':
+          description: Joueur non trouvé
+
+    patch:
+      summary: Mettre à jour partiellement un joueur (level, gold, etc.)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerUpdate'
+      responses:
+        '200':
+          description: Joueur mis à jour
+
+    delete:
+      summary: Supprimer un compte joueur
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Joueur supprimé
+
+  /players/{id}/inventory:
+    get:
+      summary: Voir l'inventaire complet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste des items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+    post:
+      summary: Ajouter un item à l'inventaire
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '201':
+          description: Item ajouté
+
+  /players/{id}/gold:
+    patch:
+      summary: Modifier le solde d'or (transactionnel)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                  description: Peut être négatif pour un achat
+              required:
+                - amount
+      responses:
+        '200':
+          description: Nouveau solde renvoyé
+
+components:
+  schemas:
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        level:
+          type: integer
+          minimum: 1
+        inventory:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        gold:
+          type: integer
+          minimum: 0
+        brainrotId:
+          type: string
+          description: "ID de l'image associée (avatar ou meme)"
+    
+    PlayerCreate:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        level:
+          type: integer
+          default: 1
+        gold:
+          type: integer
+          default: 0
+        brainrotId:
+          type: string
+
+    PlayerUpdate:
+      type: object
+      properties:
+        level:
+          type: integer
+        gold:
+          type: integer
+        brainrotId:
+          type: string
+
+    Item:
+      type: object
+      required:
+        - itemId
+        - name
+      properties:
+        itemId:
+          type: string
+        name:
+          type: string
+        quantity:
+          type: integer
+          default: 1
+        rarity:
+          type: string
+          enum: [common, rare, epic, legendary] 

@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  player-service:
+    build: .
+    container_name: brc-player-service
+    restart: unless-stopped
+    environment:
+      PORT: 4004
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: brc_player
+      PGUSER: brc_player_user
+      PGPASSWORD: brc_player_password
+    ports:
+      - "4004:4004"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:16
+    container_name: brc-player-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: brc_player
+      POSTGRES_USER: brc_player_user
+      POSTGRES_PASSWORD: brc_player_password
+    ports:
+      - "5404:5432"
+    volumes:
+      - brc_player_pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+volumes:
+  brc_player_pgdata:
