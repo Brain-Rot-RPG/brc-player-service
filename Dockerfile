@@ -9,6 +9,8 @@ COPY src ./src
 COPY tsconfig.json .
 RUN npm run build
 
+COPY db/init.sql /docker-entrypoint-initdb.d/init.sql
+
 ENV NODE_ENV=production
 ENV PORT=4004
 EXPOSE 4004
