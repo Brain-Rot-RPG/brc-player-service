@@ -161,7 +161,7 @@ describe("player routes", () => {
       gold: 200,
     });
     expect(mockPool.query).toHaveBeenCalledWith(
-      "UPDATE player SET level = $1, brainrotId = $2, inventory = $3, gold = $4 WHERE id = $5 RETURNING *",
+      "UPDATE player SET level = $1, \"brainrotId\" = $2, inventory = $3, gold = $4 WHERE id = $5 RETURNING *",
       [10, 8, [3], 200, 2]
     );
   });
