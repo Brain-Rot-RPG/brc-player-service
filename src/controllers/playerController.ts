@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { Player } from '../models/player';
-import pool from '../db/db';
+import { Player } from '../models/player.js';
+import pool from '../db/db.js';
 
 export const createPlayer = (req: Request, res: Response, next: NextFunction) => {
     try {

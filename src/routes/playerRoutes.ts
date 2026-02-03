@@ -7,7 +7,7 @@ import {
   deletePlayer,
   updateGold,
   addItemToInventory
-} from '../controllers/playerController';
+} from '../controllers/playerController.js';
 
 const router = Router();
 
