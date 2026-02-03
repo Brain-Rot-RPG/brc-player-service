@@ -1,7 +1,16 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
 
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
+
+console.log('🔧 Database configuration:', {
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  port: process.env.PGPORT,
+});
 
 const pool = new Pool({
   user: process.env.PGUSER,

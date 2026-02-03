@@ -9,6 +9,7 @@ COPY src ./src
 COPY tsconfig.json .
 RUN npm run build
 
+ENV NODE_ENV=production
 ENV PORT=4004
 EXPOSE 4004
 
