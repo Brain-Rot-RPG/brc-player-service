@@ -161,10 +161,14 @@ export const addItemToInventory = (req: Request, res: Response, next: NextFuncti
           res.status(404).json({ message: 'Player not found' });
           return;
         }
-        const inventory: number[] = result.rows[0].inventory;
+        let inventory = result.rows[0].inventory;
+        // Ensure inventory is an array
+        if (!Array.isArray(inventory)) {
+          inventory = inventory ? [inventory] : [];
+        }
         inventory.push(itemId);
         const updateQuery = 'UPDATE player SET inventory = $1 WHERE id = $2 RETURNING *';
-        const updateValues = [inventory, id];
+        const updateValues = [JSON.stringify(inventory), id];
         pool.query(updateQuery, updateValues)
           .then((updateResult) => {
             res.json(updateResult.rows[0]);
