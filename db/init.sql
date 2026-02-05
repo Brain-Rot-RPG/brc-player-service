@@ -2,6 +2,6 @@ CREATE TABLE Player (
     id SERIAL PRIMARY KEY,
     level FLOAT,
     brainrotId INTEGER,
-    inventory JSONB DEFAULT '{}',
+    inventory INTEGER[] DEFAULT '{}',
     gold INTEGER
 );
