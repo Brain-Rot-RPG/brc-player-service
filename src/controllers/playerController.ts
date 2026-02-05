@@ -168,7 +168,7 @@ export const addItemToInventory = (req: Request, res: Response, next: NextFuncti
         }
         inventory.push(itemId);
         const updateQuery = 'UPDATE player SET inventory = $1 WHERE id = $2 RETURNING *';
-        const updateValues = [JSON.stringify(inventory), id];
+        const updateValues = [inventory, id];
         pool.query(updateQuery, updateValues)
           .then((updateResult) => {
             res.json(updateResult.rows[0]);
